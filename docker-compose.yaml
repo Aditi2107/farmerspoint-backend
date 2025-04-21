@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: farmerdb
+      POSTGRES_PASSWORD: Aditi2101
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  farmerbackend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: farmerbackend
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db
+    environment:
+      FLASK_APP: app.py
+      SQLALCHEMY_DATABASE_URI: postgresql://postgres:Aditi2101@db:5432/farmerdb
+    networks:
+      - app_network  # Adding to the app_network
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+      - "443:443"
+    depends_on:
+      - farmerbackend
+    volumes:
+        # Mounting the custom Nginx configuration
+      - /etc/ssl/private:/etc/ssl/private     # Mounting SSL certs
+    networks:
+      - app_network 
+
+volumes:
+  pgdata:
+
+networks:
+  app_network:
+    driver: bridge
