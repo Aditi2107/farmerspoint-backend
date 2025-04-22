@@ -156,5 +156,5 @@ def find_all_farms_by_farmer_id(farmer_id):
     farms = db.session.execute(stmt).scalars().all()
     return [models_to_helper(farm) for farm in farms] if farms else []  
 
-# def find_all_farms():
-#     return db.session.query(Farm).all()
+def find_all_farms():
+    return db.session.query(Farm).all()

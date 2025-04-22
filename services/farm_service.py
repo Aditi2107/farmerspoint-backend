@@ -4,6 +4,7 @@ from repositories.farm_repository import (
     create_farm,
     find_farm_by_id,
     find_all_farms_by_farmer_id,
+    find_all_farms
 )
 from services.country_service import get_or_create_country_service
 from helpers.farm_helper import FarmHelper
@@ -35,3 +36,6 @@ def get_all_farms_by_farmer_id(farmer_id: int):
     """Retrieves all farms associated with a given farmer."""
     return find_all_farms_by_farmer_id(farmer_id)  
 
+def get_all_farms_service():
+    farms = find_all_farms()
+    return [models_to_helper(farm).to_dict() for farm in farms] if farms else []

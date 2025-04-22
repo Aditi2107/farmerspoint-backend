@@ -5,6 +5,7 @@ from services.farm_service import (
     create_farm_service,
     get_farm_by_id,
     get_all_farms_by_farmer_id,
+    get_all_farms_service
 )
 # from authentication import authenticate
 from helpers.farm_helper import FarmHelper
@@ -45,3 +46,11 @@ def get_farms_by_farmer(farmer_id):
     farms = get_all_farms_by_farmer_id(farmer_id)
     return jsonify({"success": True, "farms": [farm.to_dict() for farm in farms]}), 200
 
+@farm_bp.route("/get_all_farms", methods=["GET"])
+
+def get_all_farms():
+    try:
+        farms = get_all_farms_service()
+        return jsonify({"farms": farms}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
